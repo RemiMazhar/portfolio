@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultra-Compact Star Tracker · Rémi Mazhar</title>
+<meta name="description" content="A backpack-sized star tracker built on a 50€ budget, with about 20 arcseconds of tracking precision.">
+<meta property="og:title" content="Ultra-Compact Star Tracker · Rémi Mazhar">
+<meta property="og:description" content="A backpack-sized star tracker built on a 50€ budget, with about 20 arcseconds of tracking precision.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://remimazhar.github.io/portfolio/projects/star-tracker/"><meta property="og:image" content="https://remimazhar.github.io/portfolio/projects/star-tracker/cover.jpg">
+<link rel="icon" href="../../theme/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../theme/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../theme/style.css">
+<script src="../../theme/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar wrap">
+  <a class="topbar-name" href="../../index.html">Rémi Mazhar</a>
+  <nav aria-label="Main">
+    <a href="../../index.html#projects">Projects</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a>
+  </nav>
+</header>
+<main id="main">
+<div class="wrap project">
+  <p class="back"><a href="../../index.html#projects">← All projects</a></p>
+  <header class="project-head">
+    <p class="meta"><span>06</span><span>2024 – 2025</span></p>
+    <h1>Ultra-Compact Star Tracker</h1>
+  </header>
+  <div class="project-summary">
+    <div class="lead"><p>Designed, machined and assembled an extremely compact, light and cheap star tracker to do long-exposure astrophotography with minimal equipment and setup time. Unlike my telescope mount, it is designed to be used with a relatively short (150mm) focal length, which is much more forgiving.</p></div>
+    <div class="project-side"><section><h2>Accomplishments</h2><ul><li>Achieved about 20 arcseconds tracking precision</li><li>Enabled long-exposure astrophotography on a 50€ budget</li><li>Fits in a backpack</li></ul></section><section><h2>Skills</h2><ul class="tags"><li>Arduino</li><li>CAD (Fusion 360)</li><li>3D Printing</li><li>CNC Machining</li><li>Mechanical Assembly</li><li>Mechatronics</li></ul></section></div>
+  </div>
+  <div class="project-hero"><video controls playsinline preload="none" poster="cover.jpg" src="cover.mp4"></video></div>
+  <article class="prose"><h2>Motivation</h2>
+<p>I've had a big SCT telescope with a computerized mount for some time now (see my project "Restored Computerized Telescope Mount"), which has excellent performance but is very heavy and takes very long to setup. Moreover, it has a fixed 2000mm focal length, and I wanted to experiment with wider field astrophotography. I needed a star tracker, a small device that makes a camera rotate at a constant speed to compensate for the Earth's rotation. Instead of buying one which is expensive (&gt;200€), I decided to make one, with the additional challenges of keeping the total budget under 50€ and making it fit into a backpack.</p>
+<h2>Version 1</h2>
+<p>My first idea relied on the "barn door tracker" architecture, a traditional "DIY" star tracker design that is typically manual, big, and unprecise. It works by controlling the distance between 2 "planks" with a leadscrew. As my version used a precise motor, I didn't need very long planks, so I was able to use precise 3D printed parts.</p>
+<figure><a class="zoom" href="version-1-render.webp" data-caption="Version 1: 3D-printed barn door tracker opening in three positions"><img src="version-1-render.webp" alt="Version 1: 3D-printed barn door tracker opening in three positions" loading="lazy"></a></figure>
+<p>The main issue was alignment. The axis of the star tracker has to be aligned with the Earth's polar axis. For that reason, the star tracker had to be placed on a tripod. Unfortunately, the only tripod that could fit within the budget was far from sturdy enough.</p>
+<h2>Version 2</h2>
+<p>The second version solved the tripod issue by getting rid of it entirely. Instead of relying on a flimsy orientable tripod to orient the star tracker, I chose to make a fixed tripod with the inclination necessary for my latitude. I made it from short aluminum extrusions, which makes it very sturdy, easy to assemble, and very compact, at the cost of flexibility: it can only function within 1-2° of Paris' latitude and has to be placed towards the North.</p>
+<figure><a class="zoom" href="version-2-photos.webp" data-caption="Version 2 on its fixed aluminum tripod, with the camera in three positions"><img src="version-2-photos.webp" alt="Version 2 on its fixed aluminum tripod, with the camera in three positions" loading="lazy"></a></figure>
+<h2>Version 3</h2>
+<p>So far, my only fabrication machine was my personal 3D printer. When I got into Polytechnique, I suddenly gained access to a FabLab equipped with a CNC machine. I asked the manager to teach me how to use it, and after 10 hours of training, he gave me permission to use it autonomously, which only a handful of students are allowed to do.</p>
+<p>That allowed me to rethink the design entirely, and make a much more compact one using aluminum pieces. This new one gets rid of the "barn door" architecture, opting for a more direct 2-stages reduction drive: first a 4:1 ratio is achieved with a timing belt, then a 64:1 worm drive further reduces speed.</p>
+<figure><a class="zoom" href="version-3-render.webp" data-caption="Version 3: CAD render of the compact aluminum design"><img src="version-3-render.webp" alt="Version 3: CAD render of the compact aluminum design" loading="lazy"></a></figure></article>
+  <section class="gallery"><h2>Gallery</h2><div class="gallery-grid"><figure><a class="tile zoom" href="gallery/01-star-tracker-with-camera.webp" data-caption="Star tracker with camera"><img src="gallery/01-star-tracker-with-camera.webp" alt="Star tracker with camera" loading="lazy"></a><figcaption>Star tracker with camera</figcaption></figure><figure><a class="tile zoom" href="gallery/02-nebula-photographed-with-the-star-tracker.webp" data-caption="Nebula photographed with the star tracker"><img src="gallery/02-nebula-photographed-with-the-star-tracker.webp" alt="Nebula photographed with the star tracker" loading="lazy"></a><figcaption>Nebula photographed with the star tracker</figcaption></figure></div></section>
+  <nav class="pager" aria-label="More projects">
+    <a class="pager-prev" href="../climbing-robot/index.html"><span class="meta">Previous</span><span class="pager-title">Polyarticulated Bio-Inspired Climbing Robot</span></a>
+    <a class="pager-next" href="../cookie-analysis/index.html"><span class="meta">Next</span><span class="pager-title">Cookie Analysis Software</span></a>
+  </nav>
+</div>
+</main>
+<footer class="footer wrap">
+  <span>© 2026 Rémi Mazhar</span>
+  <span class="footer-links"><a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a></span>
+</footer>
+</body>
+</html>

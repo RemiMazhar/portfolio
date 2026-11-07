@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polyarticulated Bio-Inspired Climbing Robot · Rémi Mazhar</title>
+<meta name="description" content="A robot that climbs poles of almost any shape using three 3D-printed TPU tentacles.">
+<meta property="og:title" content="Polyarticulated Bio-Inspired Climbing Robot · Rémi Mazhar">
+<meta property="og:description" content="A robot that climbs poles of almost any shape using three 3D-printed TPU tentacles.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://remimazhar.github.io/portfolio/projects/climbing-robot/"><meta property="og:image" content="https://remimazhar.github.io/portfolio/projects/climbing-robot/cover.jpg">
+<link rel="icon" href="../../theme/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../theme/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../theme/style.css">
+<script src="../../theme/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar wrap">
+  <a class="topbar-name" href="../../index.html">Rémi Mazhar</a>
+  <nav aria-label="Main">
+    <a href="../../index.html#projects">Projects</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a>
+  </nav>
+</header>
+<main id="main">
+<div class="wrap project">
+  <p class="back"><a href="../../index.html#projects">← All projects</a></p>
+  <header class="project-head">
+    <p class="meta"><span>05</span><span>2025</span></p>
+    <h1>Polyarticulated Bio-Inspired Climbing Robot</h1>
+  </header>
+  <div class="project-summary">
+    <div class="lead"><p>Developed a biomimetic climbing robot utilizing three 3D-printed TPU tentacles. The prototype executes a 9-step caterpillar-like sequence, supported by custom-machined Teflon bearings and a latex-lined grip. Each tentacle is independently actuated by a single motor pulling an internal wire.</p></div>
+    <div class="project-side"><section><h2>Accomplishments</h2><ul><li><strong>Compliant Mechanism Fabrication</strong>: Monolithically 3D-printed polyarticulated tentacles using TPU</li><li><strong>Predictive Mathematical Modeling</strong>: Developed a theoretical model based on minimizing elastic potential energy to determine the optimal variable thickness for tentacle folding</li><li>Validated vertical climbing performance (40 cm/min) across a diverse range of sections, including circular PVC, square wood, and rectangular steel beams.</li></ul></section><section><h2>Skills</h2><ul class="tags"><li>Mechanical Design</li><li>Robotics</li><li>CAD</li><li>3D Printing</li><li>Machining</li><li>Continuum Mechanics</li><li>Variational Principles</li><li>Constrained Optimization</li></ul></section></div>
+  </div>
+  <div class="project-hero"><video controls playsinline preload="none" poster="cover.jpg" src="cover.mp4"></video></div>
+  <article class="prose"><h2>Context</h2>
+<p>In 2025, researchers from USTC published <a href="https://doi.org/10.1016/j.device.2024.100646">this paper</a> about SpiRobs, an innovative polyarticulated tentacle design. Their design is based on many rigid trapezoid sections, connected by a sheet of viscoelastic material. The original intent was to use them as universal grippers for robots.</p>
+<p>This research gave me the idea of trying to use similar tentacles for other tasks: namely, grabbing a pole to climb on it. As the tentacles are designed to be able to grab almost anything, it would make the robot able to climb supports of almost any shape and material.</p>
+<h2>Architecture</h2>
+<p>For stability, the robot needs to have at least 2 points of contact with the climbing support at all time. That means it needs at least 3 tentacles.</p>
+<p>I settled for a 3 tentacles, 5 motors architecture. The movement is a 9-step sequence: one at a time, each tentacle is extended, then translated upwards, then retracted to grab the support again.</p>
+<figure><a class="zoom" href="architecture.webp" data-caption="Sketch of the three-tentacle, five-motor architecture next to the built robot"><img src="architecture.webp" alt="Sketch of the three-tentacle, five-motor architecture next to the built robot" loading="lazy"></a></figure>
+<h2>Translation Mechanism</h2>
+<p>The device consists of segments mounted on a cylindrical metal axis. By utilizing motors to manipulate the angle between the plastic rods connecting each segment, the system converts rotational motor movement into linear translation along the rod.</p>
+<p>To ensure minimal friction, I machined plain teflon bearings on a lathe.</p>
+<figure><a class="zoom" href="machining-teflon-bearing.webp" data-caption="Machining a Teflon bearing on a lathe"><img src="machining-teflon-bearing.webp" alt="Machining a Teflon bearing on a lathe" loading="lazy"></a></figure>
+<h2>Tentacles: Practical Construction</h2>
+<p>The original SpiRobs relied on many trapezoidal modules glued to a sheet of viscoelastic material. Since I did not have access to such a material, I imagined a cheaper design, with the added benefit of simplified assembly. Each tentacle is entirely 3D printed in TPU, in one single piece including both the trapezoidal modules and the flexible sheet. For additional friction with the climbing support, tentacles are coated with a thin layer of latex. I made a Python script to automatically generate a Fusion 360 model of the tentacle with any number of segments.</p>
+<p>To retract the tentacle, a motor rotates a small spool to pull on a fishing line that goes through the whole tentacle.</p>
+<figure><a class="zoom" href="tentacle-design.webp" data-caption="CAD model of a tentacle next to the printed part on the robot"><img src="tentacle-design.webp" alt="CAD model of a tentacle next to the printed part on the robot" loading="lazy"></a></figure>
+<h2>Tentacles: Geometry and Theoretical Model</h2>
+<p>As per the original SpiRobs paper, the trapezoid modules' dimensions are selected for the tentacle to retract into a logarithmic spiral. However, with a constant elastic layer, the tentacles were unable to retract properly because of self-intersection. To better understand this behavior, I designed and simulated a physical model. Each junction between two trapezoid modules is modeled as a torsion spring, and the state chosen by the tentacle is the one that minimizes elastic potential energy, subject to a geometric constraint because of the inelastic fishing line.</p>
+<p>This simulation showed that for proper retraction, the elastic sheet needed to be thicker near the base of the tentacle. I incorporated this modification in my tentacle generation script, which allowed for perfect retraction every time.</p>
+<figure><a class="zoom" href="retraction-simulation.webp" data-caption="Simulation results: constant thickness self-intersects, variable thickness does not"><img src="retraction-simulation.webp" alt="Simulation results: constant thickness self-intersects, variable thickness does not" loading="lazy"></a></figure>
+<h2>Result</h2>
+<p>The prototype was validated on four distinct surfaces, including PVC, aluminum, and steel. It achieved a steady climb speed of 40 cm/min, successfully navigated both 5cm square wooden posts and 7cm rectangular steel beams.</p>
+<p>The most important remaining problem is the durability of the tentacles: TPU tends to plastically deform over time, which causes a "shape memory" effect and makes the tentacles less effective after a few uses.</p></article>
+  <section class="gallery"><h2>Gallery</h2><div class="gallery-grid"><figure><div class="tile tile-video"><video controls playsinline aria-label="Tentacle retraction simulation" preload="none" poster="gallery/01-tentacle-retraction-simulation.jpg" src="gallery/01-tentacle-retraction-simulation.mp4"></video></div><figcaption>Tentacle retraction simulation</figcaption></figure><figure><a class="tile zoom" href="gallery/02-tentacle-cad-model.webp" data-caption="Tentacle cad model"><img src="gallery/02-tentacle-cad-model.webp" alt="Tentacle cad model" loading="lazy"></a><figcaption>Tentacle cad model</figcaption></figure><figure><a class="tile zoom" href="gallery/03-architecture-sketch.webp" data-caption="Architecture sketch"><img src="gallery/03-architecture-sketch.webp" alt="Architecture sketch" loading="lazy"></a><figcaption>Architecture sketch</figcaption></figure><figure><a class="tile zoom" href="gallery/04-spiral-geometry-figure-from-the-spirobs-paper.webp" data-caption="Spiral geometry figure from the spirobs paper"><img src="gallery/04-spiral-geometry-figure-from-the-spirobs-paper.webp" alt="Spiral geometry figure from the spirobs paper" loading="lazy"></a><figcaption>Spiral geometry figure from the spirobs paper</figcaption></figure></div></section>
+  <nav class="pager" aria-label="More projects">
+    <a class="pager-prev" href="../tattoo-robot/index.html"><span class="meta">Previous</span><span class="pager-title">Tattoo Robot</span></a>
+    <a class="pager-next" href="../star-tracker/index.html"><span class="meta">Next</span><span class="pager-title">Ultra-Compact Star Tracker</span></a>
+  </nav>
+</div>
+</main>
+<footer class="footer wrap">
+  <span>© 2026 Rémi Mazhar</span>
+  <span class="footer-links"><a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a></span>
+</footer>
+</body>
+</html>

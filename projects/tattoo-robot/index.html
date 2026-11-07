@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tattoo Robot · Rémi Mazhar</title>
+<meta name="description" content="A tattoo robot built from scratch, with Tripteron kinematics and laser mapping of the skin.">
+<meta property="og:title" content="Tattoo Robot · Rémi Mazhar">
+<meta property="og:description" content="A tattoo robot built from scratch, with Tripteron kinematics and laser mapping of the skin.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://remimazhar.github.io/portfolio/projects/tattoo-robot/"><meta property="og:image" content="https://remimazhar.github.io/portfolio/projects/tattoo-robot/cover.jpg">
+<link rel="icon" href="../../theme/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../theme/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../theme/style.css">
+<script src="../../theme/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar wrap">
+  <a class="topbar-name" href="../../index.html">Rémi Mazhar</a>
+  <nav aria-label="Main">
+    <a href="../../index.html#projects">Projects</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a>
+  </nav>
+</header>
+<main id="main">
+<div class="wrap project">
+  <p class="back"><a href="../../index.html#projects">← All projects</a></p>
+  <header class="project-head">
+    <p class="meta"><span>04</span><span>2026</span></p>
+    <h1>Tattoo Robot</h1>
+  </header>
+  <div class="project-summary">
+    <div class="lead"><p>There are a few examples online of people modifying 3D printers by attaching a tattoo machine to the toolhead to get a tattoo. These attempts are generally not very successful. I decided to make an advanced tattoo robot from scratch, using precise sensors and a more appropriate structure to solve the problems DIY tattoo robots typically fail to address.</p></div>
+    <div class="project-side"><section><h2>Accomplishments</h2><ul><li>Machined a sturdy Tripteron architecture</li><li>Designed and built a robust computer control system</li><li>Successfully tattooed fake skin</li></ul></section><section><h2>Skills</h2><ul class="tags"><li>Python</li><li>Raspberry Pi</li><li>OpenGL</li><li>Laser triangulation sensors</li><li>Mechanical design</li><li>Mechanical integration</li><li>CAD (Fusion 360)</li><li>3D Printing</li><li>CNC Machining</li></ul></section></div>
+  </div>
+  <div class="project-hero"><video controls playsinline preload="none" poster="cover.jpg" src="cover.mp4"></video></div>
+  <article class="prose"><h2>Why Hobbyists Typically Fail</h2>
+<p>Most hobbyist tattoo robots give really poor results, as per <a href="https://www.youtube.com/watch?v=byY_M9Cyu_I">this example</a>. The main reason is that even slight inaccuracies in the needle depth can cause a blow-out, which means the ink is deposited too deep (in the layer of fat under the skin) and makes a huge puddle instead of a clean spot. Most hobbyists use modified Core-XY 3D printers, that not only lack sensors to measure skin height, but also lack a proper z-axis. Indeed, in Core-XY 3D printers, the print head doesn't move up and down, the build plate does, which makes adjusting needle height quite dangerous.</p>
+<p>The most critical issue is thus to control very precisely the depth of the needle. This principle guided all my design choices.</p>
+<h2>Structure</h2>
+<p>This is certainly the most unusual element of the project. To be able to adjust needle height, the toolhead needs to be able to move in 3D space, unlike a 3D printer where one axis is handled by moving the build plate. With a traditional architecture, that would mean having a nested gantry system, which makes maintaining stiffness difficult.</p>
+<p>I opted for a parallel kinematic system, specifically the Tripteron (rather than the more traditional Delta because I wanted to avoid ball joints). Tripterons are typically implemented in the following way with 3 perpendicular axes:</p>
+<figure><a class="zoom" href="tripteron-render.webp" data-caption="Tripteron mechanism with three perpendicular axes"><img src="tripteron-render.webp" alt="Tripteron mechanism with three perpendicular axes" loading="lazy"></a></figure>
+<p>but the axes can actually be in almost any position. I decided to have all 3 axes parallel, to match the geometry of an arm and make sure the machine will be able to do forearm tattoos.</p>
+<figure><a class="zoom" href="tripteron-parallel-axes.webp" data-caption="The robot&#x27;s Tripteron assembly, with all three axes parallel"><img src="tripteron-parallel-axes.webp" alt="The robot&#x27;s Tripteron assembly, with all three axes parallel" loading="lazy"></a></figure>
+<p>To ensure maximum precision and reliability, I chose to have each axis mounted on a linear guide rail and actuated by lead screws.</p>
+<h2>Measurement</h2>
+<p>It is critical to know at all times where the needle is relative to the skin. I opted to have a sensor scan the skin and make a 3D map of it prior to the tattooing.</p>
+<p>Since LiDAR sensors are typically not precise enough, I first implemented mapping with a BLTouch (touch sensors designed for 3D printers).</p>
+<figure><a class="zoom" href="skin-map-on-monitor.webp" data-caption="3D map of the skin displayed on the Raspberry Pi monitor"><img src="skin-map-on-monitor.webp" alt="3D map of the skin displayed on the Raspberry Pi monitor" loading="lazy"></a></figure>
+<p>While this did work, it was very slow because of the sensor's reaction time. I decided to replace it by a much more expensive laser triangulation sensor, able to measure distance almost instantly and with very high precision.</p>
+<h2>Tattoo Machine Mounting</h2>
+<p>I used a commercially available tattoo machine, which is simply cylindrical and does not have any mounting holes. To mount it on the toolhead, I designed a collet mechanism based on 3D printed pieces, the collet itself being in TPU for maximum friction.</p>
+<h2>Software and Electronics</h2>
+<p>The motors are controlled by a 3D printer control board running Marlin. Since Marlin doesn't support tripteron geometry, a Raspberry Pi computes the appropriate transformation and sends G-code commands to the control board to trick it into performing the expected movements.</p>
+<p>The Raspberry Pi is equipped with a monitor to render a 3D wireframe map of the skin during operation. It features a complete user interface allowing the user to run tests, run 3D mapping with desired precision, start and stop 3D rendering, and start tattooing.</p>
+<p>To make a tattoo, the user inputs an SVG file, and the program is able to convert it into a toolpath for the toolhead.</p></article>
+  <section class="gallery"><h2>Gallery</h2><div class="gallery-grid"><figure><a class="tile zoom" href="gallery/01-tattoo-on-fake-skin.webp" data-caption="Tattoo on fake skin"><img src="gallery/01-tattoo-on-fake-skin.webp" alt="Tattoo on fake skin" loading="lazy"></a><figcaption>Tattoo on fake skin</figcaption></figure><figure><div class="tile tile-video"><video controls playsinline aria-label="Machining parts on the cnc" preload="none" poster="gallery/02-machining-parts-on-the-cnc.jpg" src="gallery/02-machining-parts-on-the-cnc.mp4"></video></div><figcaption>Machining parts on the cnc</figcaption></figure></div></section>
+  <nav class="pager" aria-label="More projects">
+    <a class="pager-prev" href="../rocket-engine/index.html"><span class="meta">Previous</span><span class="pager-title">Liquid Propellant Rocket Engine</span></a>
+    <a class="pager-next" href="../climbing-robot/index.html"><span class="meta">Next</span><span class="pager-title">Polyarticulated Bio-Inspired Climbing Robot</span></a>
+  </nav>
+</div>
+</main>
+<footer class="footer wrap">
+  <span>© 2026 Rémi Mazhar</span>
+  <span class="footer-links"><a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a></span>
+</footer>
+</body>
+</html>

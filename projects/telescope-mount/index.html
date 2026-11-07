@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Restored Computerized Telescope Mount · Rémi Mazhar</title>
+<meta name="description" content="New electronics for a 30-year-old computerized telescope mount, tracking the sky with arcsecond precision.">
+<meta property="og:title" content="Restored Computerized Telescope Mount · Rémi Mazhar">
+<meta property="og:description" content="New electronics for a 30-year-old computerized telescope mount, tracking the sky with arcsecond precision.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://remimazhar.github.io/portfolio/projects/telescope-mount/"><meta property="og:image" content="https://remimazhar.github.io/portfolio/projects/telescope-mount/cover.webp">
+<link rel="icon" href="../../theme/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../theme/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../theme/style.css">
+<script src="../../theme/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar wrap">
+  <a class="topbar-name" href="../../index.html">Rémi Mazhar</a>
+  <nav aria-label="Main">
+    <a href="../../index.html#projects">Projects</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a>
+  </nav>
+</header>
+<main id="main">
+<div class="wrap project">
+  <p class="back"><a href="../../index.html#projects">← All projects</a></p>
+  <header class="project-head">
+    <p class="meta"><span>02</span><span>2024 – 2025</span></p>
+    <h1>Restored Computerized Telescope Mount</h1>
+  </header>
+  <div class="project-summary">
+    <div class="lead"><p>Designed and built new electronics for a 30-year-old computerized telescope mount that had been out of order for years. Achieved arcsecond precision in sidereal tracking, allowing for quality astrophotography on recycled hardware.</p></div>
+    <div class="project-side"><section><h2>Accomplishments</h2><ul><li>Created a telescope control system from scratch</li><li>Restored almost full functionality of an advanced piece of equipment</li><li>Enabled astrophotography on a budget</li></ul></section><section><h2>Skills</h2><ul class="tags"><li>Electronics</li><li>Embedded systems</li><li>RP2040 microcontroller</li><li>C programming</li><li>Digital PID</li></ul></section></div>
+  </div>
+  <div class="project-hero"><a class="zoom" href="cover.webp" data-caption="Restored Computerized Telescope Mount"><img src="cover.webp" alt="Restored Computerized Telescope Mount"></a></div>
+  <article class="prose"><h2>Origin Story</h2>
+<p>In 2024, I inherited an old Meade LX200 telescope. This is one of the oldest computerized telescopes on the market. Built like a tank, capable of precise movements to point to anything in the sky, and even able to compensate for Earth's rotation to allow for long-exposure astrophotography (sidereal tracking), it was the best one could get in the 1990s. Unfortunately, this unit's electronics had been dead for decades.</p>
+<p>As an astronomy enthusiast, I was interested in astrophotography, but the cost had always been prohibitive for me. I knew if I could replace this telescope's electronics, it could be my gateway into astrophotography!</p>
+<h2>Observations</h2>
+<p>After a lot of troubleshooting that led me to understand the electronics couldn't be repaired and had to be replaced, I assessed what I knew about the telescope mount and reverse engineered as much of it as I could to have a rough idea of what challenges I would need to solve. Here are some of the observations I made:</p>
+<ul><li>All electronic components in the telescope are very big, and connector sizes match what is used nowadays in hobbyist hardware (jumper wires, Raspberry Pi style headers...)</li><li>The motherboard was beyond saving, but all the <strong>mechanical parts were in perfect condition</strong>, including the motors and gears.</li><li>Both axes' drives are identical and rely on a simple <strong>DC motor with closed-loop feedback</strong>. The DC motor drives a gearbox with a 10800:1 reduction ratio. A 90-slot quadrature rotary encoder is attached to each motor shaft. That means each encoder generates 10800 pulses per degree of rotation.</li><li>The encoder reading and feedback loop were managed by the motherboard. That meant I had to design a feedback loop, and a system able to read the 172800 pulses/second from the encoders to achieve the original 8°/s speed.</li></ul>
+<figure><a class="zoom" href="mount-drive-gear-and-motor.webp" data-caption="Inside the mount: the large drive gear, DC motor and encoder"><img src="mount-drive-gear-and-motor.webp" alt="Inside the mount: the large drive gear, DC motor and encoder" loading="lazy"></a></figure>
+<h2>Project outline</h2>
+<p>From this, I was able to sketch what the project would look like:</p>
+<ul><li>The motherboard is replaced by a microcontroller</li><li>A Python program on my laptop sends commands to the microcontroller</li><li>This Python program looks up the position of the celestial object I want in a database, corrects for the current time and location, and sends the appropriate command</li><li>The <strong>microcontroller is constantly listening for pulses</strong> from the encoders, so that it knows very precisely the position of both axes at any time</li><li>When it receives a command, the microcontroller sends the appropriate voltage to the motors according to a digital PID feedback loop.</li></ul>
+<h2>Feedback Loop</h2>
+<p>I quickly identified that the main challenge would be to be able to detect <strong>172800 pulses per second</strong> to keep track of the axes' position, without missing a single one, while performing all other firmware-related tasks. After a few tests, I realized an Arduino, which I was familiar with, was just not reliable enough to do this. Even though an Arduino's clock speed is theoretically fast enough, some pulses were always missed even when using hardware interrupts, which caused drift over time.</p>
+<p>To tackle this challenge, I chose a device that had just been released at the time: the <strong>RP2040 microcontroller</strong>. The reason is that it has 8 "<strong>PIO (Programmable Input/Output)</strong>" state machines, that essentially behave as small secondary microcontrollers dealing with simple input/output related computations. This was perfect for my rotary encoders: the PIO can keep track of the encoder positions, while being blazing fast with no interference from the main loop code.</p>
+<p>The main code then deals with the feedback loop, computing the PID control voltage to send to the motors.</p>
+<p>It can run in two different modes: either targeting a fixed position, or targeting a fixed speed (useful specifically for sidereal tracking).</p>
+<h2>Driving the motors</h2>
+<p>After frying an L293D DC motor H-bridge, I switched to a more robust L298N. It had the added benefit that it came on a circuit board which included a heatsink and a 5V output I could use to power the microcontroller.</p>
+<p>The RP2040 can only generate 3.3V, while the L298N expects 5V. I had to use level shifters to achieve reliable operation.</p>
+<p>The L298N only supports digital input and output. To have precise control over the voltage the motors receive, the solution I chose was to send <strong>PWM signal</strong>. By lowering the duty cycle, the average voltage drops, which allows control. Fortunately, the RP2040 supports hardware-based PWM.</p>
+<p>At first, I also tried adding an electronic low-pass filter after the H-bridge, but it ended up being unnecessary, as the motor itself acts as a low-pass filter.</p>
+<h2>Computer control</h2>
+<p>Using the Astropy library, I easily made a Python script that could search for a celestial object in a database, get its coordinates, and compute the axes positions needed to point at it.</p>
+<p>To send commands, I connect the microcontroller via USB and use the pyserial library for serial communication, with a very simple protocol inspired by the original LX200 protocol. Managing the serial communication is one more thing the microcontroller main loop has to do, which is one more reason to use PIO.</p>
+<h2>Autoguiding</h2>
+<p>This feature is still experimental but gives promising results.</p>
+<p>All astrophotography mounts, even the best ones, have some periodic error or polar alignment error that causes drift over time. This drift is typically slow enough to not be noticeable on a single picture, but deep-sky astrophotography typically requires many exposures of the same object over the course of the night. In that case, the misalignment is a big problem. The best solution is generally to add a secondary camera that measures the displacement of the stars in the field of view. The computer can then send corrections to the mount.</p>
+<p>Since my system does not use a standard firmware, it is not compatible with any traditional astronomy software. However, PHD Guiding was compatible with my camera, and I could use the ST-4 autoguiding protocol to send correction commands to the microcontroller through the camera. The microcontroller then interprets these commands to drive the motors accordingly.</p>
+<h2>Results</h2>
+<p>I am now able to reliably point my telescope to any object in the sky in seconds, and take very long exposure pictures, sometimes for the whole night or even multiple nights in a row!</p>
+<p>This project marked the beginning of my astrophotography journey, which continues to this day. I use every opportunity I get to go outside at night and take pictures of the sky, and I feel like my skills are really improving over time.</p>
+<figure><a class="zoom" href="deep-sky-photo.webp" data-caption="Deep-sky photo of a red nebula taken with the restored telescope"><img src="deep-sky-photo.webp" alt="Deep-sky photo of a red nebula taken with the restored telescope" loading="lazy"></a></figure>
+<p>The only inconvenience left is the size and setup time of the telescope. This led me to start my next project: a tiny, cheap, astrophotography star tracker!</p></article>
+  <section class="gallery"><h2>Gallery</h2><div class="gallery-grid"><figure><div class="tile tile-video"><video controls playsinline aria-label="Telescope moving on its mount" preload="none" poster="gallery/01-telescope-moving-on-its-mount.jpg" src="gallery/01-telescope-moving-on-its-mount.mp4"></video></div><figcaption>Telescope moving on its mount</figcaption></figure><figure><a class="tile zoom" href="gallery/02-nebula-photographed-with-the-telescope.webp" data-caption="Nebula photographed with the telescope"><img src="gallery/02-nebula-photographed-with-the-telescope.webp" alt="Nebula photographed with the telescope" loading="lazy"></a><figcaption>Nebula photographed with the telescope</figcaption></figure><figure><a class="tile zoom" href="gallery/03-electronics-on-the-test-bench.webp" data-caption="Electronics on the test bench"><img src="gallery/03-electronics-on-the-test-bench.webp" alt="Electronics on the test bench" loading="lazy"></a><figcaption>Electronics on the test bench</figcaption></figure><figure><a class="tile zoom" href="gallery/04-new-electronics-in-the-mount-base.webp" data-caption="New electronics in the mount base"><img src="gallery/04-new-electronics-in-the-mount-base.webp" alt="New electronics in the mount base" loading="lazy"></a><figcaption>New electronics in the mount base</figcaption></figure><figure><a class="tile zoom" href="gallery/05-original-motherboard.webp" data-caption="Original motherboard"><img src="gallery/05-original-motherboard.webp" alt="Original motherboard" loading="lazy"></a><figcaption>Original motherboard</figcaption></figure><figure><div class="tile tile-video"><video controls playsinline aria-label="Mount moving close up" preload="none" poster="gallery/06-mount-moving-close-up.jpg" src="gallery/06-mount-moving-close-up.mp4"></video></div><figcaption>Mount moving close up</figcaption></figure></div></section>
+  <nav class="pager" aria-label="More projects">
+    <a class="pager-prev" href="../robotics-cup/index.html"><span class="meta">Previous</span><span class="pager-title">French Robotics Cup 2027</span></a>
+    <a class="pager-next" href="../rocket-engine/index.html"><span class="meta">Next</span><span class="pager-title">Liquid Propellant Rocket Engine</span></a>
+  </nav>
+</div>
+</main>
+<footer class="footer wrap">
+  <span>© 2026 Rémi Mazhar</span>
+  <span class="footer-links"><a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a></span>
+</footer>
+</body>
+</html>

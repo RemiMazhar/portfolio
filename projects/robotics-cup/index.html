@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>French Robotics Cup 2027 · Rémi Mazhar</title>
+<meta name="description" content="Leading a team of 15 to build a fully autonomous robot that builds a cardboard castle in a 100-second match.">
+<meta property="og:title" content="French Robotics Cup 2027 · Rémi Mazhar">
+<meta property="og:description" content="Leading a team of 15 to build a fully autonomous robot that builds a cardboard castle in a 100-second match.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://remimazhar.github.io/portfolio/projects/robotics-cup/"><meta property="og:image" content="https://remimazhar.github.io/portfolio/projects/robotics-cup/cover.jpg">
+<link rel="icon" href="../../theme/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="../../theme/fonts/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../theme/style.css">
+<script src="../../theme/site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="topbar wrap">
+  <a class="topbar-name" href="../../index.html">Rémi Mazhar</a>
+  <nav aria-label="Main">
+    <a href="../../index.html#projects">Projects</a>
+    <a href="../../index.html#about">About</a>
+    <a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a>
+  </nav>
+</header>
+<main id="main">
+<div class="wrap project">
+  <p class="back"><a href="../../index.html#projects">← All projects</a></p>
+  <header class="project-head">
+    <p class="meta"><span>01</span><span>2026 – 2027</span></p>
+    <h1>French Robotics Cup 2027</h1>
+  </header>
+  <div class="project-summary">
+    <div class="lead"><p>I am project lead for RobotX, École Polytechnique's robotics club, for the French Robotics Cup (Coupe de France de robotique). Our team of 15 students is designing and building a fully autonomous robot for the national competition in May 2027. Before building anything, we simulated a full match to check that our robot could complete the whole castle in 100 seconds.</p></div>
+    <div class="project-side"><section><h2>Accomplishments</h2><ul><li>Leading a team of 15 students through design, build and testing</li><li>Planned the match strategy: the full castle in 2 trips, 19 stones moved</li><li>Simulated the complete match: 89 points with provisional scoring, and no stone knocked over</li><li>Checked the size limits and collisions at all 2,922 positions of the robot during the match</li></ul></section><section><h2>Skills</h2><ul class="tags"><li>Project management</li><li>Autonomous robotics</li><li>Match strategy</li><li>Simulation</li><li>Mechanism design</li><li>Vacuum gripping</li></ul></section><section><h2>Links</h2><ul><li><a href="https://robotx.binets.fr/">RobotX</a></li><li><a href="https://www.coupederobotique.fr/">Coupe de France de robotique</a></li><li><a href="https://www.eurobot.org/">Eurobot</a></li></ul></section></div>
+  </div>
+  <div class="project-hero"><video controls playsinline preload="none" poster="cover.jpg" src="cover.mp4"></video></div>
+  <article class="prose"><h2>The competition in a nutshell</h2>
+<p>The French Robotics Cup is the French qualifier of Eurobot, an international robotics contest for students and young amateurs. Every year the organisers publish a new game, and teams have about eight months to build a robot for it from scratch. The three best French teams go on to the European final.</p>
+<p>A match works like this:</p>
+<ul><li><strong>Two robots, one table.</strong> Two teams face off on a 3 m × 2 m table, each starting from its own corner.</li><li><strong>100 seconds.</strong> A team member pulls a cord to start the robot. From then on, nobody may touch it.</li><li><strong>Fully autonomous.</strong> There is no remote control. The robot has to know where it is, find the game pieces, and detect the opposing robot so it doesn't crash into it.</li><li><strong>Strict size limits.</strong> At the start, the robot must fit inside a 1.2 m loop of string (1.4 m once its arms are out) and stay under 35 cm tall.</li><li><strong>Points.</strong> Referees count points at the end. Anything still held by a robot when time runs out doesn't count.</li></ul>
+<h2>This year's game: The Legend of Camelot</h2>
+<p>The 2027 theme is King Arthur. The main task is to build your castle: 30 cardboard "stones" (32 × 11 × 11 cm boxes of about 90 g) start in quarries around the table, and each team builds its castle along the ramparts on its side.</p>
+<p>The castle plan has three kinds of structures:</p>
+<ul><li><strong>Wall:</strong> 3 stones lying flat and stacked, in a rectangular zone.</li><li><strong>Tower:</strong> 1 stone standing upright, in a circular zone.</li><li><strong>Gate:</strong> 2 standing stones with a third laid across the top, built only once per castle.</li></ul>
+<p>Teams can earn extra points in other ways: raising their Grail as high as possible, sending small helper robots to attack the opponent's moat, throwing foam cannonballs into the enemy courtyard, and parking back in the throne room at the end. The rules themselves recommend picking a few actions and doing them reliably, so we focused on the castle, which is where most of the points are.</p>
+<figure><a class="zoom" href="starting-position.webp" data-caption="Start of the match. Our castle zone is on the left: 4 walls (B1, B2, D1, D2), 4 towers (T1 to T4) and the gate (P)."><img src="starting-position.webp" alt="The table at the start of the match: our robot in its starting zone, with stones in the quarries" loading="lazy"></a><figcaption>Start of the match. Our castle zone is on the left: 4 walls (B1, B2, D1, D2), 4 towers (T1 to T4) and the gate (P).</figcaption></figure>
+<h2>Our strategy: the whole castle in two trips</h2>
+<p>Driving back and forth costs most of a match, so we designed the robot to carry as much as possible at once. It holds up to <strong>5 stacks of 3 stones at the same time</strong>: two on each side for the walls, and one at the front for the towers and the gate. A sixth grip at the back handles the gate's lintel.</p>
+<p>The video at the top of this page shows the full simulated match. The panel in its corner tracks the score, the robot's height and perimeter against the limits, and which parts of the castle are done.</p>
+<p><strong>Trip 1: loading and building the main walls</strong></p>
+<ol><li>The front grip picks up a full stack from the central quarry with 3 suction cups, and a lift raises it 5 mm.</li><li>The robot loads two stacks on each side, gripping each stone by its end with one suction cup. It now carries 15 stones and stays under 35 cm tall.</li><li>It drives into its castle and slides each side stack into place for the back walls.</li><li>The front stack is tipped a quarter turn so the stones lie flat. Stones may only go above 35 cm over the castle, so the tipping happens there.</li><li>A piston pushes single stones forward to stand them up as the two back towers. The robot then turns 45° to set the diagonal walls.</li><li>On its way out, it uses the last front stone for a third tower.</li></ol>
+<div class="media-row"><figure><a class="zoom" href="robot-carrying-15-stones.webp" data-caption="15 stones on board after loading"><img src="robot-carrying-15-stones.webp" alt="The robot carrying 15 stones at once" loading="lazy"></a><figcaption>15 stones on board after loading</figcaption></figure><figure><a class="zoom" href="tipping-a-stack.webp" data-caption="Tipping the front stack, which is allowed above the castle only"><img src="tipping-a-stack.webp" alt="The front stack tipping over the castle" loading="lazy"></a><figcaption>Tipping the front stack, which is allowed above the castle only</figcaption></figure></div>
+<p><strong>Trip 2: the gate</strong></p>
+<ol><li>The back grip takes the top stone from a quarry to use as the lintel. The front grip takes the last full stack.</li><li>One stone from the front stack becomes the fourth tower.</li><li>Two pistons push out the gate's pillars together, 11 cm apart.</li><li>The robot turns around, slides the lintel over the pillars, and lowers it into place. The gate is complete.</li><li>The robot parks in the throne room for the end-of-match points.</li></ol>
+<p>The result is a complete castle with 4 walls, 4 towers and the gate, worth 89 points under the scoring we used for planning. The official scoring will be published with the final rules.</p>
+<h2>Why simulate first</h2>
+<p>The simulation lets us test the strategy and the robot's size before cutting any parts. At every moment of the match it checks the rule limits: height, perimeter, and whether the robot touches anything it shouldn't. It also shows how much margin we have. For example, building the back towers before the diagonal walls leaves at least 2 cm of clearance when placing them.</p>
+<h2>Current status</h2>
+<p>The strategy and the robot's overall design are set. The team is now designing and building the mechanisms, ready for the competition in May 2027.</p></article>
+  
+  <nav class="pager" aria-label="More projects">
+    <span></span>
+    <a class="pager-next" href="../telescope-mount/index.html"><span class="meta">Next</span><span class="pager-title">Restored Computerized Telescope Mount</span></a>
+  </nav>
+</div>
+</main>
+<footer class="footer wrap">
+  <span>© 2026 Rémi Mazhar</span>
+  <span class="footer-links"><a href="../../assets/resume.pdf">Résumé</a><a href="https://github.com/RemiMazhar">GitHub</a><a href="mailto:remi.mazhar@polytechnique.edu">Email</a></span>
+</footer>
+</body>
+</html>
